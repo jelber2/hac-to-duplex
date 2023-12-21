@@ -1,5 +1,10 @@
 # hac-to-duplex
 
+Playing around with [vechat's racon](https://github.com/jelber2/vechat/) for overlap-based error-correction, [Brutal rewrite](https://github.com/natir/br) for kmer-based error-correction, and [peregrine-2021](https://github.com/cschin/peregrine-2021) for overlap-based error-correction on Human Ultra-long (N50 > 100Kbp) Nanopore Simplex reads called with dna_r10.4.1_e8.2_400bps_sup_v4.3.0 on dorado v0.5.0.
+
+![plot](https://github.com/jelber2/hac-to-duplex/blob/main/chr20_hac_vs_sup_vs_dup_vs_sup-error-correct.svg)
+
+
 input is GAF file of HAC reads mapped with minigraph (https://github.com/lh3/minigraph)
 to chromosomes of human pangenome of the t2t human assembly as reference and other asssemblies
 made with minigraph (https://zenodo.org/records/6983934)
@@ -57,7 +62,7 @@ CWD="/sandbox3/SP62_uHMW_25072023_pangenome" # current working directory
 
 the Snakemake file:
 
-/home/jelber43/sandbox3/SP62_uHMW_25072023_pangenome/hac-to-corrected-compared-to-duplex2.smk
+`/home/jelber43/sandbox3/SP62_uHMW_25072023_pangenome/hac-to-corrected-compared-to-duplex2.smk`
 
 ```yaml
 #
@@ -650,7 +655,7 @@ rule gfatools:
 
 ## script to run in the docker container
 
-/home/jelber43/sandbox3/SP62_uHMW_25072023_pangenome/test.sh
+`/home/jelber43/sandbox3/SP62_uHMW_25072023_pangenome/test.sh`
 
 ```bash
 #! /bin/bash
