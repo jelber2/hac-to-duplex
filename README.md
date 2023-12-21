@@ -42,7 +42,7 @@ export HDF5_PLUGIN_PATH=/home/jelber43/.local/hdf5/lib/plugin
 
 ```bash
 ~/bin/slow5tools-v1.1.0/slow5tools merge -t 32 -c zstd -s svb-zd 20230725_1206_P2S-00581-A_PAK86034_9e5850fe/*.blow5 \
-# --output SP62_uHMW_25072023.blow5 > slow5toolsMerge.log 2>&1 && ~/bin/slow5tools-v1.1.0/slow5tools index SP62_uHMW_25072023.blow5 > slow5toolsIndex.log 2>&1 &
+--output SP62_uHMW_25072023.blow5 > slow5toolsMerge.log 2>&1 && ~/bin/slow5tools-v1.1.0/slow5tools index SP62_uHMW_25072023.blow5 > slow5toolsIndex.log 2>&1 &
 ```
 
 ## delete the directories containing the blow5 individual files
