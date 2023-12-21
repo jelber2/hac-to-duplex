@@ -835,4 +835,10 @@ git checkout c9458ba
 make
 ```
 
-## hope to upload the container to docker hub soon
+## Docker container
+
+When it finishes uploading, you can do:
+
+```bash
+docker pull jelber2/hac-to-duplex
+```
