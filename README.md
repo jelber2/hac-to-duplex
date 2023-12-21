@@ -313,7 +313,7 @@ rule pg_ovlp_ec1:
 # compress corrected reads
 rule compress_fasta1:
         input: expand(["{id}/pg_asm2/2_{threads2}.fa"], threads2=THREADS4, allow_missing=True)
-	output: expand(["{id}/pg_asm2/2_{threads2}.fa.gz"], threads2=THREADS4, allow_missing=True)
+        output: expand(["{id}/pg_asm2/2_{threads2}.fa.gz"], threads2=THREADS4, allow_missing=True)
         params: THREADS
         shell: """pigz -p {params} {input}"""
 
@@ -587,7 +587,7 @@ rule raft3:
         input:
             reads = "raft1/errorcorrect_{id}.ec.fa",
             overlaps = "raft2/getOverlaps_{id}.paf",
-	    svg = "raft2/{id}_original_versus_error-corrected_and_duplex_error_rates.svg"
+            svg = "raft2/{id}_original_versus_error-corrected_and_duplex_error_rates.svg"
         output:
             multiext("raft3/fragmented_{id}", ".reads.fasta", ".long_repeats.txt", ".coverage.txt", ".long_repeats.bed")
         params:
