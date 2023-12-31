@@ -32,6 +32,8 @@ done < <(cat <(seq 1 22) <(echo -e "M\nX")|perl -pe "s/^/chr/g")
 
 ## Convert FAST5 files to BLOW5 files then merge them and index them
 
+uses [slow5tools](https://github.com/hasindu2008/slow5tools)
+
 ```bash
 export HDF5_PLUGIN_PATH=/home/jelber43/.local/hdf5/lib/plugin
 
@@ -692,7 +694,7 @@ rough steps for how the docker container was made
 Ubuntu 20.04 LTS (Focal Fossa) container
 
 ```bash
-nvidia-docker run --gpus all -it --rm -v /home/jelber43/sandbox3:/sandbox3/ -v /home/jelber43/bin:/git/ -v /var/run/docker.sock:/var/run/docker.sock
+nvidia-docker run --gpus all -it --rm -v /home/jelber43/sandbox3:/sandbox3/ -v /home/jelber43/bin:/git/ -v /var/run/docker.sock:/var/run/docker.sock ubuntu
 
 # Install micromamba
 "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
