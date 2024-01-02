@@ -200,33 +200,42 @@ rule vechat:
         input:
             reads="fasta/{id}.fasta.gz",
             paf="vechat/{id}.paf.gz"
-        output: paf="vechat/{id}.vechat.fasta"
+        output: "vechat/{id}.vechat.fasta.gz"
         params: THREADS
         shell: """
         /home/git/vechat/build/bin/racon --no-trimming -u -f -p -d 0.2 -s 0.2 -t {params} \
-        -b --cudaaligner-batches 1 -c 1 {input.reads} {input.paf} {input.reads} > {output}
+        -b --cudaaligner-batches 1 -c 1 {input.reads} {input.paf} {input.reads} | pigz -p {params} > {output}
         """
 
 
 # run brutal rewrite
 rule brutal_rewrite:
-        input: "vechat/{id}.vechat.fasta"
-        output: "br/{id}.vechat.br.fasta"
+        input: "vechat/{id}.vechat.fasta.gz"
+        output:
+            raw = temp("br/{id}.vechat.br.fasta"),
+            gz = "br/{id}.vechat.br.fasta.gz"
         params: THREADS
-        shell: """/home/git/br/target/release/br -t {params} -k 19 -i {input} -m graph -o {output}"""
+        shell: """/home/git/br/target/release/br -t {params} -k 19 -i {input} -m graph -o {output.raw}
+        cat {output.raw} | pigz -p {params} > {output.gz}
+        """
 
 
 # run KMER FILTER
 rule kmer_filter:
-        input: "br/{id}.vechat.br.fasta"
-        output: "kmrf/{id}.vechat.br.kmrf.fasta"
-        shell: """/home/git/kmrf/target/release/kmrf -k 17 -i {input} -o {output}"""
+        input: "br/{id}.vechat.br.fasta.gz"
+        output:
+            raw = temp("kmrf/{id}.vechat.br.kmrf.fasta"),
+            gz1 = temp("br/{id}.vechat.br.kmrf.fasta"),
+            gz2 = "kmrf/{id}.vechat.br.kmrf.fasta.gz"
+        shell: """
+        /home/git/kmrf/target/release/kmrf -k 17 -i {input} -o {output}
+        cat {output.gz1} | pigz -p {params} > {output.gz2}"""
 
 
 # add parition step
 rule partition:
-    input: "kmrf/{id}.vechat.br.kmrf.fasta"
-    output: scatter.split("partition/{{id}}.vechat.br.kmrf_{scatteritem}.fasta.gz")
+    input: "kmrf/{id}.vechat.br.kmrf.fasta.gz"
+    output: temp(scatter.split("partition/{{id}}.vechat.br.kmrf_{scatteritem}.fasta.gz"))
     params:
         split = "8",
         memory = MEMORY_SIZE2
@@ -246,7 +255,7 @@ rule partition:
 # add shredding step
 rule shred:
     input: "partition/{id}.vechat.br.kmrf_{scatteritem}.fasta.gz"
-    output: "shred/{id}.vechat.br.kmrf.shred_{scatteritem}.fasta.gz"
+    output: temp("shred/{id}.vechat.br.kmrf.shred_{scatteritem}.fasta.gz")
     params: MEMORY_SIZE2
     shell: '''
         eval "$(/home/.local/bin/micromamba shell hook --shell bash)"
@@ -568,7 +577,7 @@ rule overlap_error_rates2:
         echo "test2 <- read.table(\\"{input.corr}\\", header=F)" >> raft2/{wildcards.id}.R
         echo "test3 <- read.table(\\"{input.duplex}\\", header=F)" >> raft2/{wildcards.id}.R
         echo "" >> raft2/{wildcards.id}.R
-        echo "test4 <- data.frame(\\"identities\\" = c(test\\$V10/test\\$V11, test2\\$V10/test2\\$V11), test3\\$V10/test3\\$V11)" >> raft2/{wildcards.id}.R
+        echo "test4 <- data.frame(\\"identities\\" = c(test\\$V10/test\\$V11, test2\\$V10/test2\\$V11, test3\\$V10/test3\\$V11)" >> raft2/{wildcards.id}.R
         echo "                    \\"dataset\\" = c(rep(\\"original\\", length(test\\$V10)), rep(\\"corrected\\", length(test2\\$V10)))), rep(\\"duplex\\", length(test3\\$V10))))" >> raft2/{wildcards.id}.R
         echo "" >> raft2/{wildcards.id}.R
         echo "test4\\$phred <- -10*log10((1-test4\\$identities))" >> raft2/{wildcards.id}.R
