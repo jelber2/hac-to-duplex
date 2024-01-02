@@ -166,8 +166,7 @@ rule bam2fastq:
 rule mm2_fast:
         input: "fasta/{id}.fasta.gz"
         output:
-            paf = temp("vechat/{id}.paf"),
-            paf2 = "vechat/{id}.paf.gz",
+            paf = "vechat/{id}.paf.gz",
             mm2_fast = temp(multiext("fasta/{id}.fasta.gz_ava-ont_minimizers_key_value_sorted", "_keys.rmi_PARAMETERS",
                                 "_pos_bin", "_val_bin", "_size", "_keys.uint64")),
             mm2_fast2 = temp(directory("{id}_2"))
@@ -191,8 +190,7 @@ rule mm2_fast:
         export CXX=/usr/bin/c++
         export RUST_BACKTRACE=full
         ./minimap2 -I 64G -t {params.threads} -x ava-ont {params.CWD}/{input} {params.CWD}/{input} | \
-        awk '$11>=500' > {params.CWD}/{output.paf}
-        cat {params.CWD}/{output.paf} | /home/git/fpa/target/release/fpa drop --same-name --internalmatch - | pigz -p {params.threads} > {params.CWD}/{output.paf2}
+        awk '$11>=500' | tail -n +2 | /home/git/fpa/target/release/fpa drop --same-name --internalmatch - | pigz -p {params.threads} > {params.CWD}/{output.paf}
         micromamba deactivate
         """
 
