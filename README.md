@@ -167,7 +167,7 @@ rule mm2_fast:
         input: "fasta/{id}.fasta.gz"
         output:
             paf = "vechat/{id}.paf.gz",
-            mm2_fast = temp(multiext("{id}.fasta.gz_ava-ont_minimizers_key_value_sorted", "_keys.rmi_PARAMETERS",
+            mm2_fast = temp(multiext("fasta/{id}.fasta.gz_ava-ont_minimizers_key_value_sorted", "_keys.rmi_PARAMETERS",
                                 "_pos_bin", "_val_bin", "_size", "_keys.uint64"))
         params:
             CWD=CWD,
