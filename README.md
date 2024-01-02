@@ -212,10 +212,13 @@ rule vechat:
 rule brutal_rewrite:
         input: "vechat/{id}.vechat.fasta.gz"
         output:
+            temp = temp("vechat/{id}.vechat.fasta"),
             raw = temp("br/{id}.vechat.br.fasta"),
             gz = "br/{id}.vechat.br.fasta.gz"
         params: THREADS
-        shell: """/home/git/br/target/release/br -t {params} -k 19 -i {input} -m graph -o {output.raw}
+        shell: """
+        pigz -kd {input}
+        /home/git/br/target/release/br -t {params} -k 19 -i {output.temp} -m graph -o {output.raw}
         cat {output.raw} | pigz -p {params} > {output.gz}
         """
 
@@ -224,12 +227,15 @@ rule brutal_rewrite:
 rule kmer_filter:
         input: "br/{id}.vechat.br.fasta.gz"
         output:
+            temp = temp("br/{id}.vechat.br.fasta"),
             raw = temp("kmrf/{id}.vechat.br.kmrf.fasta"),
-            gz1 = temp("br/{id}.vechat.br.kmrf.fasta"),
             gz2 = "kmrf/{id}.vechat.br.kmrf.fasta.gz"
+        params: THREADS
         shell: """
-        /home/git/kmrf/target/release/kmrf -k 17 -i {input} -o {output}
-        cat {output.gz1} | pigz -p {params} > {output.gz2}"""
+        pigz -kd {input}
+        /home/git/kmrf/target/release/kmrf -k 17 -i {output.temp} -o {output.raw}
+        cat {output.raw} | pigz -p {params} > {output.gz2}
+        """
 
 
 # add parition step
@@ -577,7 +583,7 @@ rule overlap_error_rates2:
         echo "test2 <- read.table(\\"{input.corr}\\", header=F)" >> raft2/{wildcards.id}.R
         echo "test3 <- read.table(\\"{input.duplex}\\", header=F)" >> raft2/{wildcards.id}.R
         echo "" >> raft2/{wildcards.id}.R
-        echo "test4 <- data.frame(\\"identities\\" = c(test\\$V10/test\\$V11, test2\\$V10/test2\\$V11, test3\\$V10/test3\\$V11)" >> raft2/{wildcards.id}.R
+        echo "test4 <- data.frame(\\"identities\\" = c(test\\$V10/test\\$V11, test2\\$V10/test2\\$V11, test3\\$V10/test3\\$V11)," >> raft2/{wildcards.id}.R
         echo "                    \\"dataset\\" = c(rep(\\"original\\", length(test\\$V10)), rep(\\"corrected\\", length(test2\\$V10)))), rep(\\"duplex\\", length(test3\\$V10))))" >> raft2/{wildcards.id}.R
         echo "" >> raft2/{wildcards.id}.R
         echo "test4\\$phred <- -10*log10((1-test4\\$identities))" >> raft2/{wildcards.id}.R
