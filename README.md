@@ -55,6 +55,11 @@ rm -r SP62_uHMW_25072023/
 
 ## Snakemake file
 
+Here it is as a diagram.
+
+![plot](https://github.com/jelber2/hac-to-duplex/blob/main/test.svg)
+
+
 for the following file, you need to manually set the following values for your system, file names, etc.
 
 `MEMORY_SIZE1="300G"` # maximum memory
