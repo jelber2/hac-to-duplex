@@ -691,13 +691,13 @@ micromamba deactivate
 
 One example output file of interest is an SVG file such as
 
-`raft2/{id}_original_versus_error-corrected_and_duplex_error_rates.svg`
+`1) raft2/{id}_original_versus_error-corrected_and_duplex_error_rates.svg`
 
 where `{id}` is the name of the chr, here chr17.
 
 ![plot](https://github.com/jelber2/hac-to-duplex/blob/main/chr17_original_versus_error-corrected_and_duplex_error_rates.svg)
 
-`raft1/errorcorrect_{id}.ec.fa`
+`2) raft1/errorcorrect_{id}.ec.fa`
 
 These are the error-corrected reads used by hifiasm for de novo assembly, where `{id}` is the name of the chr, such as "chr17".
 
@@ -706,10 +706,10 @@ these reads for de novo assembly with hifiasm or [hifiasm](https://github.com/ch
 
 I will try to train a [clair3](https://github.com/HKU-BAL/Clair3) model for these data, but so far, I was not getting very good F1 scores with just HG003 and a single chromosome.
 
-`raft4/finalasm_{id}.bp.hap1.p_ctg.gfa`
+`3) raft4/finalasm_{id}.bp.hap1.p_ctg.gfa`
 where `{id}` is the name of the chr, such as "chr17".
 
-`raft4/finalasm_{id}.bp.hap2.p_ctg.gfa`
+`4) raft4/finalasm_{id}.bp.hap2.p_ctg.gfa`
 where `{id}` is the name of the chr, such as "chr17".
 
 These two files are of interest because they have long phase blocks and are [dual assemblies](https://lh3.github.io/2021/10/10/introducing-dual-assembly).
