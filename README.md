@@ -200,48 +200,38 @@ rule vechat:
         input:
             reads="fasta/{id}.fasta.gz",
             paf="vechat/{id}.paf.gz"
-        output: "vechat/{id}.vechat.fasta.gz"
+        output: "vechat/{id}.vechat.fasta"
         params: THREADS
         shell: """
         /home/git/vechat/build/bin/racon --no-trimming -u -f -p -d 0.2 -s 0.2 -t {params} \
-        -b --cudaaligner-batches 1 -c 1 {input.reads} {input.paf} {input.reads} | pigz -p {params} > {output}
+        -b --cudaaligner-batches 1 -c 1 {input.reads} {input.paf} {input.reads} > {output}
         """
 
 
 # run brutal rewrite
 rule brutal_rewrite:
-        input: "vechat/{id}.vechat.fasta.gz"
-        output:
-            temp = temp("vechat/{id}.vechat.fasta"),
-            raw = temp("br/{id}.vechat.br.fasta"),
-            gz = "br/{id}.vechat.br.fasta.gz"
+        input: "vechat/{id}.vechat.fasta"
+        output: "br/{id}.vechat.br.fasta"
         params: THREADS
         shell: """
-        pigz -kd {input}
-        /home/git/br/target/release/br -t {params} -k 19 -i {output.temp} -m graph -o {output.raw}
-        cat {output.raw} | pigz -p {params} > {output.gz}
+        /home/git/br/target/release/br -t {params} -k 19 -i {input} -m graph -o {output}
         """
 
 
 # run KMER FILTER
 rule kmer_filter:
-        input: "br/{id}.vechat.br.fasta.gz"
-        output:
-            temp = temp("br/{id}.vechat.br.fasta"),
-            raw = temp("kmrf/{id}.vechat.br.kmrf.fasta"),
-            gz2 = "kmrf/{id}.vechat.br.kmrf.fasta.gz"
+        input: "br/{id}.vechat.br.fasta"
+        output: "kmrf/{id}.vechat.br.kmrf.fasta"
         params: THREADS
         shell: """
-        pigz -kd {input}
-        /home/git/kmrf/target/release/kmrf -k 17 -i {output.temp} -o {output.raw}
-        cat {output.raw} | pigz -p {params} > {output.gz2}
+        /home/git/kmrf/target/release/kmrf -k 17 -i {input} -o {output}
         """
 
 
 # add parition step
 rule partition:
-    input: "kmrf/{id}.vechat.br.kmrf.fasta.gz"
-    output: temp(scatter.split("partition/{{id}}.vechat.br.kmrf_{scatteritem}.fasta.gz"))
+    input: "kmrf/{id}.vechat.br.kmrf.fasta"
+    output: scatter.split("partition/{{id}}.vechat.br.kmrf_{scatteritem}.fasta.gz")
     params:
         split = "8",
         memory = MEMORY_SIZE2
@@ -261,7 +251,7 @@ rule partition:
 # add shredding step
 rule shred:
     input: "partition/{id}.vechat.br.kmrf_{scatteritem}.fasta.gz"
-    output: temp("shred/{id}.vechat.br.kmrf.shred_{scatteritem}.fasta.gz")
+    output: "shred/{id}.vechat.br.kmrf.shred_{scatteritem}.fasta.gz"
     params: MEMORY_SIZE2
     shell: '''
         eval "$(/home/.local/bin/micromamba shell hook --shell bash)"
