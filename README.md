@@ -574,15 +574,15 @@ rule overlap_error_rates2:
         echo "test3 <- read.table(\\"{input.duplex}\\", header=F)" >> raft2/{wildcards.id}.R
         echo "" >> raft2/{wildcards.id}.R
         echo "test4 <- data.frame(\\"identities\\" = c(test\\$V10/test\\$V11, test2\\$V10/test2\\$V11, test3\\$V10/test3\\$V11)," >> raft2/{wildcards.id}.R
-        echo "                    \\"dataset\\" = c(rep(\\"original\\", length(test\\$V10)), rep(\\"corrected\\", length(test2\\$V10)))), rep(\\"duplex\\", length(test3\\$V10))))" >> raft2/{wildcards.id}.R
+        echo "                    \\"dataset\\" = c(rep(\\"original\\", length(test\\$V10)), rep(\\"corrected\\", length(test2\\$V10)), rep(\\"duplex\\", length(test3\\$V10))))" >> raft2/{wildcards.id}.R
         echo "" >> raft2/{wildcards.id}.R
         echo "test4\\$phred <- -10*log10((1-test4\\$identities))" >> raft2/{wildcards.id}.R
         echo "test4\\$phred[is.infinite(test4\\$phred)] <- 70" >> raft2/{wildcards.id}.R
         echo "" >> raft2/{wildcards.id}.R
         echo "plot4 <- ggplot(test4, aes(x=phred, fill = dataset, colour = dataset)) + geom_density(alpha = 0.1) + theme_classic() +" >> raft2/{wildcards.id}.R
-        echo "        theme(axis.title = element_text(size = 20), axis.text = element_text(size =15)," >> raft2/{wildcards.id}.R
+        echo "        theme(axis.title = element_text(size = 17), axis.text = element_text(size =15)," >> raft2/{wildcards.id}.R
         echo "        legend.position=c(0.7, 0.5)) +" >> raft2/{wildcards.id}.R
-        echo "    xlab(\\"Alignment Identity Converted to Phred Score\\") +" >> raft2/{wildcards.id}.R
+        echo "    xlab(\\"Number of residue matches/Alignment block length (Read Alignment Identity) Converted to Phred Score, Q70 = no mismatches\\") +" >> raft2/{wildcards.id}.R
         echo "    ylab(\\"Proportion of Reads\\") +" >> raft2/{wildcards.id}.R
         echo "    scale_x_continuous(" >> raft2/{wildcards.id}.R
         echo "        breaks = c(seq(from=0, to=70, by=2))," >> raft2/{wildcards.id}.R
@@ -686,6 +686,34 @@ micromamba activate snakemake
 snakemake -j 1 --snakefile hac-to-corrected-compared-to-duplex2.smk --printshellcmds --latency-wait 60 --cores 48 all > SP62_uHMW_25072023_pangenome.log 2>&1
 micromamba deactivate
 ```
+
+## Example output files of interest
+
+One example output file of interest is an SVG file such as
+
+`raft2/{id}_original_versus_error-corrected_and_duplex_error_rates.svg`
+
+where `{id}` is the name of the chr, here chr17.
+
+![plot](https://github.com/jelber2/hac-to-duplex/blob/main/chr17_original_versus_error-corrected_and_duplex_error_rates.svg)
+
+`raft1/errorcorrect_{id}.ec.fa`
+
+These are the error-corrected reads used by hifiasm for de novo assembly, where `{id}` is the name of the chr, such as "chr17".
+
+`Note`so far, there are no variant calling models trained or with proper parameters for these data, so, so far, I have only used
+these reads for de novo assembly with hifiasm or [hifiam](https://github.com/chhylp123/hifiasm)/[raft](https://github.com/at-cg/RAFT)
+
+I will try to train a [clair3](https://github.com/HKU-BAL/Clair3) model for these data, but so far, I was not getting very good F1 scores with just HG003 and a single chromosome.
+
+`raft4/finalasm_{id}.bp.hap1.p_ctg.gfa`
+where `{id}` is the name of the chr, such as "chr17".
+
+`raft4/finalasm_{id}.bp.hap2.p_ctg.gfa`
+where `{id}` is the name of the chr, such as "chr17".
+
+These two files are of interest because they have long phase blocks and are [dual assemblies](https://lh3.github.io/2021/10/10/introducing-dual-assembly).
+
 
 ## commands to run the docker container
 
