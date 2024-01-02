@@ -702,7 +702,7 @@ where `{id}` is the name of the chr, here chr17.
 These are the error-corrected reads used by hifiasm for de novo assembly, where `{id}` is the name of the chr, such as "chr17".
 
 `Note`so far, there are no variant calling models trained or with proper parameters for these data, so, so far, I have only used
-these reads for de novo assembly with hifiasm or [hifiam](https://github.com/chhylp123/hifiasm)/[raft](https://github.com/at-cg/RAFT)
+these reads for de novo assembly with hifiasm or [hifiasm](https://github.com/chhylp123/hifiasm)/[raft](https://github.com/at-cg/RAFT)
 
 I will try to train a [clair3](https://github.com/HKU-BAL/Clair3) model for these data, but so far, I was not getting very good F1 scores with just HG003 and a single chromosome.
 
