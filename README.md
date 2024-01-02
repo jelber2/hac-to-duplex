@@ -184,7 +184,7 @@ rule mm2_fast:
         perl -pi -e "s/ext\/build-rmi\/learned-systems-rmi/ext\/TAL\/ext\/build-rmi\/learned-systems-rmi/g" scripts/build-rmi.linear_spline.linear.sh
         perl -pi -e "s/rm /rm -f /g" scripts/build-rmi.linear_spline.linear.sh
         export CXX=/usr/bin/c++
-        ./minimap2 -c -I 64G -t {params.threads} -x ava-ont {params.CWD}/{input} {params.CWD}/{input} | \
+        ./minimap2 -I 64G -t {params.threads} -x ava-ont {params.CWD}/{input} {params.CWD}/{input} | \
         awk '$11>=500'| \
         /home/git/fpa/target/release/fpa drop --same-name --internalmatch - |pigz -p {params.threads} > {params.CWD}/{output}
         micromamba deactivate
