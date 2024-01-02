@@ -57,12 +57,15 @@ rm -r SP62_uHMW_25072023/
 
 for the following file, you need to manually set the following values for your system, file names, etc.
 
-MEMORY_SIZE1="300G" # maximum memory
-MEMORY_SIZE2="-Xmx300g" # maximum memory
-BLOW5="../SP62_uHMW_25072023.blow5" # location of your BLOW5 file
-CWD="/sandbox3/SP62_uHMW_25072023_pangenome" # current working directory
+`MEMORY_SIZE1="300G"` # maximum memory
 
-the Snakemake file:
+`MEMORY_SIZE2="-Xmx300g"` # maximum memory
+
+`BLOW5="../SP62_uHMW_25072023.blow5"` # location of your BLOW5 file
+
+`CWD="/sandbox3/SP62_uHMW_25072023_pangenome"` # current working directory
+
+the Snakemake Snakefile:
 
 `/home/jelber43/sandbox3/SP62_uHMW_25072023_pangenome/hac-to-corrected-compared-to-duplex2.smk`
 
