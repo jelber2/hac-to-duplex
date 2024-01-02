@@ -188,8 +188,9 @@ rule mm2_fast:
         perl -pi -e "s/rm /rm -f /g" scripts/build-rmi.linear_spline.linear.sh
         export CXX=/usr/bin/c++
         export RUST_BACKTRACE=full
+        set +u
         ./minimap2 -I 64G -t {params.threads} -x ava-ont {params.CWD}/{input} {params.CWD}/{input} | \
-        awk '$11>=500'| \
+        perl -lane "print if $F[12] >= 500" | \
         /home/git/fpa/target/release/fpa drop --same-name --internalmatch - |pigz -p {params.threads} > {params.CWD}/{output.paf}
         micromamba deactivate
         cd ../../
@@ -786,7 +787,7 @@ micromamba deactivate
 
 ```bash
 chmod u+x test.sh
-nvidia-docker run --gpus all -it --rm -v /home/jelber43/sandbox3:/sandbox3/ -v /home/jelber43/bin:/git/ -v /var/run/docker.sock:/var/run/docker.sock hac-to-duplex /sandbox3/SP62_uHMW_25072023_pangenome/test.sh &
+nvidia-docker run --gpus all --rm -v /home/jelber43/sandbox3:/sandbox3/ -v /home/jelber43/bin:/git/ -v /var/run/docker.sock:/var/run/docker.sock hac-to-duplex /sandbox3/SP62_uHMW_25072023_pangenome/test.sh &
 ```
 
 
