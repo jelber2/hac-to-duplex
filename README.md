@@ -890,10 +890,11 @@ git checkout c9458ba
 make
 ```
 
-## Docker container
+## Docker containers
 
 When it finishes uploading, you can do:
 
 ```bash
-docker pull jelber2/hac-to-duplex
+docker pull jelber2/hac-to-duplex # for an ubuntu 20.04 container, you only need one, not both...
+docker pull jelber2/hac-to-duplex2 # for an ubuntu 22.04 container
 ```
