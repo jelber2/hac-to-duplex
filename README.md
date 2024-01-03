@@ -70,6 +70,8 @@ for the following file, you need to manually set the following values for your s
 
 `CWD="/sandbox3/SP62_uHMW_25072023_pangenome"` # current working directory
 
+put your gzipped `gaf` (see above) in `CWD/gaf` in the format `{id}.gaf.gz`, where `{id}` is for example `chr17`
+
 the Snakemake Snakefile:
 
 `/home/jelber43/sandbox3/SP62_uHMW_25072023_pangenome/hac-to-corrected-compared-to-duplex2.smk`
