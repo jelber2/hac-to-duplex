@@ -1,6 +1,6 @@
 # hac-to-duplex
 
-Playing around with [vechat's racon](https://github.com/jelber2/vechat/) for overlap-based error-correction, [Brutal rewrite](https://github.com/natir/br) for kmer-based error-correction, and [peregrine-2021](https://github.com/cschin/peregrine-2021) for overlap-based error-correction on Human Ultra-long (N50 > 100Kbp) Nanopore Simplex reads called with dna_r10.4.1_e8.2_400bps_sup_v4.3.0 on dorado v0.5.0.
+Playing around with [vechat's racon](https://github.com/jelber2/vechat/) for overlap-based error-correction, [Brutal rewrite](https://github.com/natir/br) for kmer-based error-correction, and [peregrine-2021](https://github.com/cschin/peregrine-2021) for overlap-based error-correction on **Human** Ultra-long (N50 > 100Kbp) Nanopore Simplex reads called with dna_r10.4.1_e8.2_400bps_sup_v4.3.0 on dorado v0.5.0.
 
 ![plot](https://github.com/jelber2/hac-to-duplex/blob/main/chr20_hac_vs_sup_vs_dup_vs_sup-error-correct.svg)
 
@@ -9,18 +9,20 @@ input is GAF file of HAC reads mapped with minigraph (https://github.com/lh3/min
 to chromosomes of human pangenome of the t2t human assembly as reference and other asssemblies
 made with minigraph (https://zenodo.org/records/6983934)
 
-## get pangenome
+## Initial pre-pipeline steps
+
+### get pangenome
 ```bash
 wget https://zenodo.org/records/6983934/files/chm13-90c.r518.gfa.gz
 ```
 
-## run minigraph
+### run minigraph
 
 ```bash
 ~/bin/minigraph/minigraph -t 32 -cx lr ../sandbox3/chm13-90c.r518.gfa.gz /mnt/share/nanopore/Tamara/BIonano-Test/SP62_uHMW_25072023/20230725_1206_P2S-00581-A_PAK86034_9e5850fe/basecalling_dorado/SP62_ULK114.fastq.gz 2> SP62_uHMW_25072023_minigraph.log | pigz -p 12 > SP62_uHMW_25072023.gaf.gz &
 ```
 
-## Separate the gaf.gz file into separate chromosomes
+### Separate the gaf.gz file into separate chromosomes
 
 ```bash
 mkdir -p SP62_uHMW_25072023_pangenome/gaf
@@ -30,7 +32,7 @@ do
 done < <(cat <(seq 1 22) <(echo -e "M\nX")|perl -pe "s/^/chr/g")
 ```
 
-## Convert FAST5 files to BLOW5 files then merge them and index them
+### Convert FAST5 files to BLOW5 files then merge them and index them
 
 uses [slow5tools](https://github.com/hasindu2008/slow5tools)
 
@@ -40,14 +42,14 @@ export HDF5_PLUGIN_PATH=/home/jelber43/.local/hdf5/lib/plugin
 ~/bin/slow5tools-v1.1.0/slow5tools f2s -d 20230725_1206_P2S-00581-A_PAK86034_9e5850fe -c zstd -s svb-zd /mnt/share/nanopore/Tamara/BIonano-Test/SP62_uHMW_25072023/20230725_1206_P2S-00581-A_PAK86034_9e5850fe/fast5_pass/ > SP62_uHMW_25072023_20230725_1206_P2S-00581-A_PAK86034_9e5850fe.blow5.log 2>&1 &
 ```
 
-## merge and index blow5 file
+### merge and index blow5 file
 
 ```bash
 ~/bin/slow5tools-v1.1.0/slow5tools merge -t 32 -c zstd -s svb-zd 20230725_1206_P2S-00581-A_PAK86034_9e5850fe/*.blow5 \
 --output SP62_uHMW_25072023.blow5 > slow5toolsMerge.log 2>&1 && ~/bin/slow5tools-v1.1.0/slow5tools index SP62_uHMW_25072023.blow5 > slow5toolsIndex.log 2>&1 &
 ```
 
-## delete the directories containing the blow5 individual files
+### delete the directories containing the blow5 individual files
 
 ```bash
 rm -r SP62_uHMW_25072023/
