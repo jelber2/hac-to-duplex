@@ -901,6 +901,10 @@ docker pull jelber2/hac-to-duplex2 # for an ubuntu 22.04 container
 
 ## FYI
 I have another Snakefile that uses two rounds of error-correction with vechat's racon and does not use the duplex reads
-see the file [hac-to-corrected-with-vechat-twice-ultra-long.smk](https://github.com/jelber2/hac-to-duplex/blob/main/hac-to-corrected-with-vechat-twice-with-ultra-long.smk) in this repo, the steps look like this:
+see the file [hac-to-corrected-with-vechat-twice-ultra-long.smk](https://github.com/jelber2/hac-to-duplex/blob/main/hac-to-corrected-with-vechat-twice-with-ultra-long.smk) in this repo.
+
+You need to use this `jelber2/hac-to-duplex2` container as it has julialang 1.10 installed.
+
+the steps look like this:
 
 ![plot](https://github.com/jelber2/hac-to-duplex/blob/main/test2.svg)
