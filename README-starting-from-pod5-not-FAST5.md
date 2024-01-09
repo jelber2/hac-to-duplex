@@ -24,7 +24,7 @@ cat /mnt/share/nanopore/gridion-data-offload-destination/WGS_HG002_Monarch_08012
 mkdir -p WGS_HG002_Monarch_08012024/gaf
 while read i
 do
-  zcat WGS_HG002_Monarch_08012024.gaf.gz |awk -v chromosome="$i" '$6 ~ chromosome":" || $6 == chromosome' OFS='\t' |pigz -p 12 > WGS_HG002_Monarch_08012024_pangenome/gaf/${i}.gaf.gz
+  zcat WGS_HG002_Monarch_08012024.gaf.gz |awk -v chromosome="$i" '$6 ~ chromosome":" || $6 == chromosome' OFS='\t' |pigz -p 12 > WGS_HG002_Monarch_08012024/gaf/${i}.gaf.gz
 done < <(cat <(seq 1 22) <(echo -e "M\nX\nY")|perl -pe "s/^/chr/g"|grep "chr22")
 ```
 
@@ -66,7 +66,7 @@ THREADS4=[str(item).zfill(2) for item in THREADS3]
 MEMORY_SIZE1="300G"
 MEMORY_SIZE2="-Xmx300g"
 BLOW5="../2024-01-09-09-09-08.merged.pod5"
-CWD="/sandbox4/WGS_HG002_Monarch_08012024_pangenome"
+CWD="/sandbox4/WGS_HG002_Monarch_08012024"
 
 scattergather:
     split=8
@@ -90,7 +90,7 @@ rule gaf:
         shell: """zcat {input} |cut -f 1|sort --parallel={params.threads} -S {params.memory} > {output}"""
 
 
-# use slow5tools get to retrieve reads from a pangenome chromosome
+# use pod5 python package get to retrieve reads from a pangenome chromosome
 rule pod5:
         input:
             reads="fast5/{id}_read_names.txt",
