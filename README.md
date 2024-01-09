@@ -1,5 +1,9 @@
 # hac-to-duplex
 
+**assumes_starting_from_fast5 and HAC called FASTQs**
+
+**if starting from pod5**, then see [README-starting-from-pod5-not-FAST5.md](https://github.com/jelber2/hac-to-duplex/blob/main/README-starting-from-pod5-not-FAST5.md)
+
 Playing around with [vechat's racon](https://github.com/jelber2/vechat/) for overlap-based error-correction, [Brutal rewrite](https://github.com/natir/br) for kmer-based error-correction, and [peregrine-2021](https://github.com/cschin/peregrine-2021) for overlap-based error-correction on **Human** Ultra-long (N50 > 100Kbp) Nanopore Simplex reads called with dna_r10.4.1_e8.2_400bps_sup_v4.3.0 on dorado v0.5.0.
 
 ![plot](https://github.com/jelber2/hac-to-duplex/blob/main/chr20_hac_vs_sup_vs_dup_vs_sup-error-correct.svg)
