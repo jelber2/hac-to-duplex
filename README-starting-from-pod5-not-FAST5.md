@@ -31,7 +31,7 @@ done < <(cat <(seq 1 22) <(echo -e "M\nX\nY")|perl -pe "s/^/chr/g"|grep "chr22")
 
 Note that `ubuntu.22.04.cuda` is actually `hac-to-duplex2` from 
 
-`docker pull jelber2/hac-to-duplex2``
+`docker pull jelber2/hac-to-duplex2`
 
 ```bash
 nvidia-docker run -it --gpus all --rm -v /home/jelber43/sandbox4:/sandbox4/ -v /mnt/share/nanopore:/nanopore/ -v /var/run/docker.sock:/var/run/docker.sock ubuntu.22.04.cuda
