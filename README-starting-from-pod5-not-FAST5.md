@@ -2,6 +2,8 @@
 
 `Get the HAC FASTQ files, then map them to the pangenome with minigraph`
 
+See main README.md about how I got `chm13-90c.r518.gfa.gz`
+
 ```bash
 ~/bin/minigraph --version
 
