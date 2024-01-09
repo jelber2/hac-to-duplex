@@ -27,7 +27,7 @@ done < <(cat <(seq 1 22) <(echo -e "M\nX\nY")|perl -pe "s/^/chr/g"|grep "chr22")
 ```
 
 
-`Merge the pod5 files for easier filtering``
+`Merge the pod5 files for easier filtering`
 
 Note that `ubuntu.22.04.cuda` is actually `hac-to-duplex2` from 
 
