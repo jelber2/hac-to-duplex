@@ -65,7 +65,7 @@ THREADS3=expand(["{threads}"], threads=THREADS2)
 THREADS4=[str(item).zfill(2) for item in THREADS3]
 MEMORY_SIZE1="300G"
 MEMORY_SIZE2="-Xmx300g"
-BLOW5="../2024-01-09-09-09-08.merged.pod5"
+POD5="../2024-01-09-09-09-08.merged.pod5"
 CWD="/sandbox4/WGS_HG002_Monarch_08012024"
 
 scattergather:
@@ -94,13 +94,13 @@ rule gaf:
 rule pod5:
         input:
             reads="fast5/{id}_read_names.txt",
-            pod5=BLOW5
+            pod5=POD5
         output: "fast5/{id}.pod5"
         params: THREADS
         shell: """
         eval "$(/home/.local/bin/micromamba shell hook --shell bash)"
         micromamba activate blue-crab
-        pod5 filter {input.blow5} --output {output} --missing-ok --ids {input.reads}
+        pod5 filter {input.pod5} --output {output} --missing-ok --ids {input.reads}
         """
 
 
