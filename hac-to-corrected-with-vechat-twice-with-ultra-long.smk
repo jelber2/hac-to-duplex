@@ -234,7 +234,7 @@ rule shred:
     shell: '''
         eval "$(/home/.local/bin/micromamba shell hook --shell bash)"
         micromamba activate bbmap
-        shred.sh {params} in={input} out={output} median=90000 variance=2500
+        shred.sh {params} in={input} out={output} median=1000000 variance=2500
         micromamba deactivate
         '''
 
